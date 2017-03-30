@@ -38,8 +38,8 @@ var pageRelativePath = 'src/views/';
   */
  var config = {
      entry: Object.assign(entries(), {
-        common: ["jquery"],
-        vender: [path.resolve(__dirname, "src/module/request.js"), path.resolve(__dirname, "src/module/test.js")]
+        vender: ["jquery"],
+        common: [path.resolve(__dirname, "src/module/request.js"), path.resolve(__dirname, "src/module/test.js")]
      }),
      output: {
          path: path.resolve(__dirname, 'dist'),
@@ -52,7 +52,7 @@ var pageRelativePath = 'src/views/';
             $: 'jquery'
          }),
          new CommonsChunkPlugin({
-             name: ['common', 'vender'],
+             name: ['vender', 'common'],
              minChunks: Infinity
          })
      ],
@@ -102,7 +102,7 @@ var pageRelativePath = 'src/views/';
               filename: '../views/' + v + '.html',
               template: './src/views/' + v + '.html',
               chunks: ['common', 'vender', jsPath], //为各个页面引入对应的
-              chunksSortMode: 'dependency'
+              chunksSortMode: 'dependency' //根据依赖顺序加载文件，否则会出现加载问题
           }
           config.plugins.push(new HtmlWebpackPlugin(conf))
       })
