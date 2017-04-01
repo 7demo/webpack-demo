@@ -1,1 +1,0 @@
-webpackJsonp([6],[function(){console.log("3434")}]);
