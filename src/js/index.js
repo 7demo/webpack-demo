@@ -1,10 +1,9 @@
+
 console.log('idnex')
 
     $('body').append('<h1>121212</h1>');
-    // var require = require('request')
-    // console.log(require)
     var request = require('../module/request.js');
-    console.log(request)
+    console.log(request, request())
 
 
     require.ensure([],function(){

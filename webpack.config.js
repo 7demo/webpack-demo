@@ -3,6 +3,8 @@ var glob = require('glob');
 var path = require('path');
 var pathMap = require('./src/pathmap.json');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var es3ifyPlugin = require('es3ify-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var srcDir = path.resolve(process.cwd(), 'src');
 var jsDir = path.resolve(srcDir, 'js');
@@ -10,6 +12,7 @@ var viewDir = path.resolve(srcDir, 'views');
 var entriesFiles = glob.sync(jsDir + '/**/*.js', {nodir: true});
 var pageFiles = glob.sync('src/views/**/*.html', {nodir: true});
 var pageRelativePath = 'src/views/';
+var extractScss = new ExtractTextPlugin('style/[name].css');
 
 /**
  * 入口文件函数
@@ -34,17 +37,69 @@ var pageRelativePath = 'src/views/';
  }
 
  /**
+  * 获取模块的js文件
+  */
+  var getJsModule = function() {
+      var map = [];
+      var moduleDir = path.resolve(srcDir, 'module')
+      map = glob.sync(moduleDir + '/**/*.js', {nodir: true});
+      map.forEach(function(v, i) {
+        map[i] = path.normalize(v)
+      })
+      return map;
+  }
+
+
+  /**
+   * 获取公共基础css文件
+   */
+   var getBaseCss = function() {
+       var map = [];
+       var scssBaseDir = path.resolve(srcDir, 'scss/base');
+       map = glob.sync(scssBaseDir + '/_base.scss', {nodir: true});
+       map.forEach(function(v, i) {
+         map[i] = path.normalize(v)
+       })
+       return map;
+   }
+
+   /**
+    * 获取业务css文件
+    */
+    var getWutongCss = function() {
+        var map = [];
+        var scssDir = path.resolve(srcDir, 'scss');
+        map = glob.sync(scssDir + '/*.scss', {nodir: true});
+        map.forEach(function(v, i) {
+          map[i] = path.normalize(v)
+        })
+        return map;
+    }
+
+
+ /**
   * 配置文件
   */
  var config = {
      entry: Object.assign(entries(), {
         vender: ["jquery"],
-        common: [path.resolve(__dirname, "src/module/request.js"), path.resolve(__dirname, "src/module/test.js")]
+        common: getJsModule(),
+        base: getBaseCss(),
+        wutong: getWutongCss()
      }),
      output: {
          path: path.resolve(__dirname, 'dist'),
          filename: '[name].bundle.js',
          chunkFilename: "../dist/[name].chunk.js"
+     },
+     module: {
+         loaders: [
+
+             {
+                 test: /\.scss$/i,
+                 loader:extractScss.extract(['css','sass'])
+             }
+         ]
      },
      plugins: [
          //主要是为了暴露全局jQuery
@@ -52,15 +107,16 @@ var pageRelativePath = 'src/views/';
             $: 'jquery'
          }),
          new CommonsChunkPlugin({
-             name: ['vender', 'common'],
+             //此处一定要先打包 common 即公共模块，再打包第三方，否则会全部打到第三方中去。
+             name: ['common', 'vender'],
              minChunks: Infinity
-         })
+         }),
+         extractScss
      ],
      resolve: {
          extensions: ['', '.json', '.js', '.html'],
          alias: {
-             "jquery": path.resolve(__dirname, "src/plugins/jquery/jquery.min.js"),
-             "d3": path.resolve(__dirname, "src/plugins/d3/d3.min.js")
+             "jquery": path.resolve(__dirname, "src/plugins/jquery/jquery.min.js")
          }
      }
  }
@@ -101,15 +157,14 @@ var pageRelativePath = 'src/views/';
           var conf = {
               filename: '../views/' + v + '.html',
               template: './src/views/' + v + '.html',
-              chunks: ['common', 'vender', jsPath], //为各个页面引入对应的
+              chunks: ['vender', 'common', jsPath, 'base', 'wutong'], //为各个页面引入对应的
               chunksSortMode: 'dependency' //根据依赖顺序加载文件，否则会出现加载问题
           }
-          config.plugins.push(new HtmlWebpackPlugin(conf))
+          config.plugins.push(new HtmlWebpackPlugin(conf));
+
       })
   }
   createViews();
-
-
 
 
 

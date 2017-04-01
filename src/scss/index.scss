@@ -1,0 +1,12 @@
+@charset "UTF-8";
+@import "./base/_color.scss";
+body{
+    background: #aaa;
+    div{
+        background: #ccc;
+        color: $blue;
+    }
+    span{
+        display: inline-block;
+    }
+}

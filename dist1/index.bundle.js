@@ -1,0 +1,1 @@
+webpackJsonp([4],[function(o,n,c){(function(o){console.log("idnex"),o("body").append("<h1>121212</h1>");var n=c(1);console.log(n,n()),c.e(5,function(){var o=c(12);console.log(o)})}).call(n,c(2))}]);
