@@ -42,6 +42,20 @@ gulp.task('images', function() {
     .pipe(notify({ message: 'Images task complete' }));
 });
 
+gulp.task('default', ['minifyImg'], function () {
+     gulp.src(ROOT_PATH + '/static/**/**')
+         .pipe(scp({
+             host: '***', //ip
+             username: 'webmaster', //用户名
+             password: '91WutongWebmaster',  //密码
+             port: 9100, //端口
+             dest: '/srv/www/nodeapp/static' //目录结构
+         }))
+         .on('error', function(err) {
+             console.log(err);
+         });
+ +});
+
 // Clean  任务执行前，先清除之前生成的文件
 gulp.task('clean', function(cb) {
     del(['dist1/**/*', 'dist1/**/*', 'dist1/**/*'], cb)
