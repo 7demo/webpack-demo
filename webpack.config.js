@@ -4,9 +4,11 @@ var path = require('path');
 var pathMap = require('./src/pathmap.json');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var precss = require('precss');
+var autoprefixer = require('autoprefixer');
 var es3ifyPlugin = require('es3ify-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-var srcDir = path.resolve(process.cwd(), 'src');
+var srcDir = path.resolve(process.cwd(), 'src/lib');
 var jsDir = path.resolve(srcDir, 'js');
 var viewDir = path.resolve(srcDir, 'views');
 var entriesFiles = glob.sync(jsDir + '/**/*.js', {nodir: true});
@@ -89,7 +91,7 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
          path: path.resolve(__dirname, 'dist'),
          filename: '[name].bundle.js',
          chunkFilename: "../dist/[name].chunk.js",
-         publicPath: '/dist/'
+         publicPath: 'http://192.168.10.242:9999/dist/'
      },
      module: {
          loaders: [
@@ -107,9 +109,12 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
 			 },
              {
                  test: /\.scss$/i,
-                 loader:extractScss.extract(['css','sass'])
+                 loader:extractScss.extract(['css','postcss', 'sass'])
              }
          ]
+     },
+     postcss: function() {
+         return [precss, autoprefixer]
      },
      plugins: [
          //主要是为了暴露全局jQuery

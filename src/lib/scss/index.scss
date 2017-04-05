@@ -1,0 +1,25 @@
+@charset "UTF-8";
+@import "./base/_color.scss";
+body{
+    background: #aaa;
+    div{
+        background: #ccc;
+        color: $blue;
+    }
+    span{
+        display: inline-block;
+    }
+}
+
+.sh{
+    display: flex;
+    width: 179px;
+    height: 33px;
+    background: url('../images/44.png') no-repeat;
+}
+.st{
+    transition: all 1s;
+    width: 260px;
+    height: 96px;
+    background: url('../images/66.png') no-repeat;
+}

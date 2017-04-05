@@ -15,6 +15,7 @@
     "gulp-autoprefixer": "^3.1.1",
     "gulp-cache": "^0.4.6",
     "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.0.0",
     "gulp-imagemin": "^3.2.0",
     "gulp-jshint": "^2.0.4",
     "gulp-livereload": "^3.8.1",
@@ -27,10 +28,12 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "autoprefixer": "^6.7.7",
     "babel": "^6.23.0",
     "babel-core": "^6.24.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
+    "browser-sync": "^2.18.8",
     "css-loader": "^0.28.0",
     "es3ify-loader": "^0.2.0",
     "es3ify-webpack-plugin": "0.0.1",
@@ -40,6 +43,7 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-file-include": "^1.1.0",
+    "gulp-html-import": "0.0.2",
     "gulp-imagemin": "^3.2.0",
     "gulp-jshint": "^2.0.4",
     "gulp-minify-css": "^1.2.4",
@@ -47,12 +51,17 @@
     "gulp-uglyfly": "^1.4.2",
     "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.28.0",
+    "http-proxy-middleware": "^0.17.4",
     "jshint": "^2.9.4",
     "node-sass": "^3.4.2",
+    "postcss-import": "^9.1.0",
+    "postcss-scss": "^0.4.1",
+    "precss": "^1.4.0",
     "sass-loader": "^4.0.1",
     "shim4webpack": "0.0.2",
     "style-loader": "^0.16.1",
     "url-loader": "^0.5.8",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "webpack-spritesmith": "^0.3.3"
   }
 }
