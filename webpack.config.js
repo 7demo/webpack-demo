@@ -31,7 +31,6 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
          var filename = v.substring(v.lastIndexOf('/') + 1, v.lastIndexOf('.'));
          map[filename] = v;
      });
-
      return map;
 
  }
@@ -90,11 +89,23 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
      output: {
          path: path.resolve(__dirname, 'dist'),
          filename: '[name].bundle.js',
-         chunkFilename: "../dist/[name].chunk.js"
+         chunkFilename: "../dist/[name].chunk.js",
+         publicPath: '/dist/'
      },
      module: {
          loaders: [
-
+             {
+				test: /\.html$/,
+				loader: "html?-minimize" //避免压缩html,https://github.com/webpack/html-loader/issues/50
+			 },
+             {
+				test: /\.(woff|woff2|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+				loader: 'file-loader?name=fonts/[name].[ext]'
+			 },
+             {
+				test: /\.(png|jpe?g|gif)$/,
+				loader: 'url-loader?limit=8192&name=imgs/[name].[ext]'
+			 },
              {
                  test: /\.scss$/i,
                  loader:extractScss.extract(['css','sass'])
