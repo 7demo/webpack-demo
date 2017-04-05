@@ -83,8 +83,7 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
      entry: Object.assign(entries(), {
         vender: ["jquery"],
         common: getJsModule(),
-        base: getBaseCss(),
-        wutong: getWutongCss()
+        base: getBaseCss()
      }),
      output: {
          path: path.resolve(__dirname, 'dist'),
@@ -168,7 +167,7 @@ var extractScss = new ExtractTextPlugin('style/[name].css');
           var conf = {
               filename: '../views/' + v + '.html',
               template: './src/views/' + v + '.html',
-              chunks: ['vender', 'common', jsPath, 'base', 'wutong'], //为各个页面引入对应的
+              chunks: ['vender', 'common', jsPath, 'base'], //为各个页面引入对应的
               chunksSortMode: 'dependency' //根据依赖顺序加载文件，否则会出现加载问题
           }
           config.plugins.push(new HtmlWebpackPlugin(conf));

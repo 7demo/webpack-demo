@@ -13,6 +13,8 @@ var gulp = require('gulp'),
   livereload = require('gulp-livereload'),
   del = require('del');
 
+var fileinclude = require('gulp-file-include');
+
 
 // Styles
 gulp.task('styles', function() {
@@ -54,7 +56,15 @@ gulp.task('default', ['minifyImg'], function () {
          .on('error', function(err) {
              console.log(err);
          });
- +});
+ });
+
+ gulp.task('fileinclude', function() {
+     gulp.src(['src/template/**/*.html', '!src/template/common/**.html'])
+        .pipe(fileinclude({
+            prefix: '@@'
+        }))
+        .pipe(gulp.dest('src/views'))
+ })
 
 // Clean  任务执行前，先清除之前生成的文件
 gulp.task('clean', function(cb) {
