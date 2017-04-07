@@ -1,6 +1,6 @@
 
 console.log('idnex')
-require('../scss/index.scss');
+require('../css/index.css')
     var list = require('../template/component/show/list.js');
 
     $('body').append('<h1>121212</h1>');

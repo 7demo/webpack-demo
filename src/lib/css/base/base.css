@@ -1,0 +1,18 @@
+button span {
+	color: red;
+}
+
+label {
+	display: block;
+}
+
+.shc {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: 179px;
+	height: 33px;
+	background: url("../../images/sprite.png") no-repeat;
+	background-position: -0px -0px;
+}

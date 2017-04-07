@@ -1,0 +1,9 @@
+nav {
+	display: block;
+	background: red;
+}
+
+nav a {
+	display: inline-block;
+	color: blue;
+}

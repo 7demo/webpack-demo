@@ -1,6 +1,5 @@
 // 引入 gulp及组件
-var autoprefixer = require('gulp-autoprefixer'),
-  minifycss = require('gulp-minify-css'),		//压缩css
+var minifycss = require('gulp-minify-css'),		//压缩css
   jshint = require('gulp-jshint'),			//js代码校验
   uglify = require('gulp-uglify'),			//压缩JS
   uglyfly = require('gulp-uglyfly'),			//压缩JS
@@ -15,17 +14,19 @@ var autoprefixer = require('gulp-autoprefixer'),
  */
 var gulp = require('gulp');
 var fileinclude = require('gulp-file-include');
-
-/**
- * webpack的依赖
- */
 var server = require('tiny-lr')();
 var port = 35279;
 var livereload = require('gulp-livereload');
 var browerSync = require('browser-sync');
 var reload = browerSync.reload;
 var connect = require('gulp-connect');
+var sass = require('gulp-sass');
+var gulpautoprefixer = require('gulp-autoprefixer');
+var spriter=require('gulp-css-spriter');
 
+/**
+ * webpack的依赖
+ */
 var webpack = require('webpack');
 var glob = require('glob');
 var path = require('path');
@@ -79,31 +80,29 @@ var getJsModule = function() {
     return map;
 }
 
+
 /**
-* 获取公共基础css文件
+* 获取scss文件 gulp编译
+*/
+var getWutongScss = function() {
+    var map = [];
+    map = glob.sync('src/lib/scss/**/*.scss', {nodir: true});
+    return map;
+}
+
+/**
+* 获取基础css文件 webpack 使用
 */
 var getBaseCss = function() {
     var map = [];
-    var scssBaseDir = path.resolve(srcDir, 'scss/base');
-    map = glob.sync(scssBaseDir + '/_base.scss', {nodir: true});
+    var scssBaseDir = path.resolve(srcDir, 'css/base');
+    map = glob.sync(scssBaseDir + '/base.css', {nodir: true});
     map.forEach(function(v, i) {
         map[i] = path.normalize(v)
     })
     return map;
 }
 
-/**
-* 获取业务css文件
-*/
-var getWutongCss = function() {
-    var map = [];
-    var scssDir = path.resolve(srcDir, 'scss');
-    map = glob.sync(scssDir + '/*.scss', {nodir: true});
-    map.forEach(function(v, i) {
-        map[i] = path.normalize(v)
-    })
-    return map;
-}
 
 /**
 * 配置文件
@@ -135,13 +134,10 @@ var config = {
     			loader: 'url-loader?limit=8192&name=imgs/[name].[ext]'
     		 },
             {
-                test: /\.scss$/i,
-                loader:extractScss.extract(['css','postcss', 'sass'])
+                test: /\.css$/i,
+                loader:extractScss.extract(['css'])
             }
         ]
-    },
-    postcss: function() {
-        return [precss, autoprefixer]
     },
     plugins: [
         //主要是为了暴露全局jQuery
@@ -207,8 +203,6 @@ var createViews = function() {
     })
 }
 
-
-
 /**
  * 引入公用页面模板，便宜成views文件
  */
@@ -220,13 +214,67 @@ gulp.task('fileinclude', function() {
         .pipe(gulp.dest('src/views'))
 })
 
+
+/**
+ * sass编译成对应路径css 自动补充前缀，默认情况下，下划线开始的文件不进行编译处理，全部集成到base.scss中处理。
+   进行雪碧图，雪碧图的路径 根据当前scss的目录，自动设定层级
+   即地址 把 地址换成对应的 ../  如\\base 换成 ../  而\\base\\home 换成 ../../
+ */
+gulp.task('sass', function() {
+
+    //获得scss的所有文件，
+    var scssFiles = getWutongScss();
+    //获得 scss文件相对src/lib/scss的路径
+    var scssFilesPath = Object.keys(getPageRealtivePath(scssFiles, 'src/lib/scss'));
+    //每个文件进行编译处理
+    scssFilesPath.forEach(function(v, i) {
+
+        //雪碧图的默认路径
+        var spritesPath = '../';
+        //因为scss的路径标准化处理过，这个地方还原到window下的路径
+        var vWindowsPath = v.replace(/\\/g, '/');
+        //目录层级，/home 表示一个层级 /home/base 表示两个层级
+        var zindexArr = vWindowsPath.match(/\/\w+/g);
+        //scss打包后的路径
+        var packPath = ''
+
+        //若目录层级大于1， 则取路径 如 /home/base  则路径为 /home；
+        //☆☆☆☆☆☆☆☆☆☆☆☆此处也决定，目录只能有两级 ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+        if (zindexArr.length > 1) {
+            packPath = zindexArr[0]
+        } else {
+            packPath = '/'
+        }
+
+        //为了把 地址换成对应的 ../  如\\base 换成 ../  而\\base\\home 换成 ../../
+        if (v.indexOf('\\') > -1) {
+            spritesPath = v.replace(/\\\w+/g, '../')
+        }
+
+        gulp.src('src/lib/scss' + vWindowsPath + '.scss')
+            .pipe(gulpautoprefixer({
+                browsers: ['last 5 versions', 'Android >= 4.0'],
+                cascade: false, //是否美化属性值 默认：true 像这样：
+                remove:true //是否去掉不必要的前缀 默认：true
+            }))
+            .pipe(sass())
+            .pipe(spriter({
+                // 生成的spriter的位置
+                'spriteSheet': './src/lib/images/sprite.png',
+                'pathToSpriteSheetFromCSS': spritesPath +'images/sprite.png'
+            }))
+            .on('error', sass.logError)
+            .pipe(gulp.dest('src/lib/css' + packPath))
+        })
+
+})
+
 /**
  * webpack的任务
  */
 gulp.task('webpack', function() {
     createViews();
     webpack(config, function(err, stats) {
-        // console.log(stats)
     })
 })
 
@@ -248,18 +296,29 @@ gulp.task('brower-sync', function() {
 })
 
 /**
- * 监听任务
+ * 监听编译
  */
-gulp.task('watch', ['brower-sync'], function() {
+gulp.task('package', function() {
 
-    gulp.watch('./src/lib/**/*.html', ['fileinclude', 'webpack']).on('change', reload)
+    gulp.watch('./src/lib/**/*.html', ['fileinclude'])
+
+    gulp.watch('./src/views/**/*.html', ['webpack'])
 
     gulp.watch('./src/lib/**/*.scss', ['webpack'])
 
     gulp.watch('./src/lib/**/*.js', ['webpack'])
 
     gulp.watch('./src/lib/images/', ['webpack'])
+
 })
+/**
+ * 监听刷新
+ */
+gulp.task('watch', ['package', 'brower-sync'], function() {
+    gulp.watch('./dist').on('change', reload);
+})
+
+
 
 
 

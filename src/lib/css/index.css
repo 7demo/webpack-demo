@@ -1,0 +1,32 @@
+body {
+	background: #aaa;
+}
+
+body div {
+	background: #ccc;
+	color: blue;
+}
+
+body span {
+	display: inline-block;
+}
+
+.sh {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: 179px;
+	height: 33px;
+	background: url("../images/sprite.png") no-repeat;
+	background-position: -0px -630px;
+}
+
+.st {
+	-webkit-transition: all 1s;
+	transition: all 1s;
+	width: 260px;
+	height: 96px;
+	background: url("../images/sprite.png") no-repeat;
+	background-position: -0px -0px;
+}
