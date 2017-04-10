@@ -7,7 +7,7 @@ body{
         color: $blue;
     }
     span{
-        display: inline-block;
+        display: block;
     }
 }
 
@@ -15,11 +15,17 @@ body{
     display: flex;
     width: 179px;
     height: 33px;
-    background: url('../images/44.png') no-repeat;
+    background: url('../images/44.png?__spriter') no-repeat;
 }
 .st{
     transition: all 1s;
     width: 260px;
     height: 96px;
     background: url('../images/66.png') no-repeat;
+}
+.sw{
+    display: flex;
+    width: 179px;
+    height: 33px;
+    background: url('../images/1111.png?__spriter') no-repeat;
 }

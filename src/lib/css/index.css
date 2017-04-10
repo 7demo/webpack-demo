@@ -8,7 +8,7 @@ body div {
 }
 
 body span {
-	display: inline-block;
+	display: block;
 }
 
 .sh {
@@ -18,8 +18,8 @@ body span {
 	display: flex;
 	width: 179px;
 	height: 33px;
-	background: url("../images/sprite.png") no-repeat;
-	background-position: -0px -630px;
+	background: url("../images/index_sprite.png") no-repeat;
+	background-position: -0px -0px;
 }
 
 .st {
@@ -27,6 +27,16 @@ body span {
 	transition: all 1s;
 	width: 260px;
 	height: 96px;
-	background: url("../images/sprite.png") no-repeat;
-	background-position: -0px -0px;
+	background: url("../images/66.png") no-repeat;
+}
+
+.sw {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: 179px;
+	height: 33px;
+	background: url("../images/index_sprite.png") no-repeat;
+	background-position: -0px -73px;
 }

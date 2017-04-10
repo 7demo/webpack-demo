@@ -22,7 +22,7 @@ var reload = browerSync.reload;
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var gulpautoprefixer = require('gulp-autoprefixer');
-var spriter=require('gulp-css-spriter');
+var spriter=require('gulp-spriter-inline');
 
 /**
  * webpack的依赖
@@ -217,6 +217,7 @@ gulp.task('fileinclude', function() {
 
 /**
  * sass编译成对应路径css 自动补充前缀，默认情况下，下划线开始的文件不进行编译处理，全部集成到base.scss中处理。
+    每个scss的文件生成一个雪碧图
    进行雪碧图，雪碧图的路径 根据当前scss的目录，自动设定层级
    即地址 把 地址换成对应的 ../  如\\base 换成 ../  而\\base\\home 换成 ../../
  */
@@ -250,7 +251,8 @@ gulp.task('sass', function() {
         if (v.indexOf('\\') > -1) {
             spritesPath = v.replace(/\\\w+/g, '../')
         }
-
+        var spriteNameFix = v.substring(v.lastIndexOf('\\') + 1);
+        console.log(spriteNameFix)
         gulp.src('src/lib/scss' + vWindowsPath + '.scss')
             .pipe(gulpautoprefixer({
                 browsers: ['last 5 versions', 'Android >= 4.0'],
@@ -260,8 +262,8 @@ gulp.task('sass', function() {
             .pipe(sass())
             .pipe(spriter({
                 // 生成的spriter的位置
-                'spriteSheet': './src/lib/images/sprite.png',
-                'pathToSpriteSheetFromCSS': spritesPath +'images/sprite.png'
+                'spriteSheet': './src/lib/images/'+ spriteNameFix +'_sprite.png',
+                'pathToSpriteSheetFromCSS': spritesPath +'images/'+ spriteNameFix +'_sprite.png'
             }))
             .on('error', sass.logError)
             .pipe(gulp.dest('src/lib/css' + packPath))
@@ -304,7 +306,7 @@ gulp.task('package', function() {
 
     gulp.watch('./src/views/**/*.html', ['webpack'])
 
-    gulp.watch('./src/lib/**/*.scss', ['webpack'])
+    gulp.watch('./src/lib/**/*.scss', ['sass', 'webpack'])
 
     gulp.watch('./src/lib/**/*.js', ['webpack'])
 
