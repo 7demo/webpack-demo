@@ -300,7 +300,9 @@ gulp.task('brower-sync', function() {
  */
 gulp.task('package', function() {
 
-    gulp.watch('./src/lib/**/*.html', ['fileinclude', 'webpack'])
+    gulp.watch('./src/lib/**/*.html', ['fileinclude'])
+
+    gulp.watch('./src/views/**/*.html', ['webpack'])
 
     gulp.watch('./src/lib/**/*.scss', ['sass', 'webpack'])
 
