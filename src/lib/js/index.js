@@ -1,16 +1,11 @@
+require('../css/index.css');
 
-console.log('idnex')
-require('../css/index.css')
-    var list = require('../template/component/show/list.js');
-
-    $('body').append('<h1>121212</h1>');
-    console.log(list);
-    $('body').append(list)
-    var request = require('../module/request.js');
-    console.log(request, request())
+$('body').append('<h1>主要jss</h1>');
+var request = require('../module/request.js');
+console.log(request, request(), 2);
 
 
-    require.ensure([],function(){
-        var knob = require('../plugins/jqueryknob/jquery.knob.min.js');
-        console.log(knob)
-    }, 'knob');
+require.ensure([],function(){
+    var knob = require('../plugins/jqueryknob/jquery.knob.min.js');
+    console.log(knob);
+}, 'knob');

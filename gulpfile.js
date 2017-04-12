@@ -37,7 +37,6 @@ var autoprefixer = require('autoprefixer');
 var es3ifyPlugin = require('es3ify-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
-var pathMap = require('./src/pathmap.json');
 var srcDir = path.resolve(process.cwd(), 'src/lib');
 var jsDir = path.resolve(srcDir, 'js');
 var viewDir = path.resolve(srcDir, 'views');
@@ -76,7 +75,7 @@ var getJsModule = function() {
     map = glob.sync(moduleDir + '/**/*.js', {nodir: true});
     map.forEach(function(v, i) {
         map[i] = path.normalize(v)
-    })
+    });
     return map;
 }
 
@@ -252,10 +251,9 @@ gulp.task('sass', function() {
             spritesPath = v.replace(/\\\w+/g, '../')
         }
         var spriteNameFix = v.substring(v.lastIndexOf('\\') + 1);
-        console.log(spriteNameFix)
         gulp.src('src/lib/scss' + vWindowsPath + '.scss')
             .pipe(gulpautoprefixer({
-                browsers: ['last 5 versions', 'Android >= 4.0'],
+                browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
                 cascade: false, //是否美化属性值 默认：true 像这样：
                 remove:true //是否去掉不必要的前缀 默认：true
             }))
@@ -302,9 +300,7 @@ gulp.task('brower-sync', function() {
  */
 gulp.task('package', function() {
 
-    gulp.watch('./src/lib/**/*.html', ['fileinclude'])
-
-    gulp.watch('./src/views/**/*.html', ['webpack'])
+    gulp.watch('./src/lib/**/*.html', ['fileinclude', 'webpack'])
 
     gulp.watch('./src/lib/**/*.scss', ['sass', 'webpack'])
 
@@ -319,11 +315,6 @@ gulp.task('package', function() {
 gulp.task('watch', ['package', 'brower-sync'], function() {
     gulp.watch('./dist').on('change', reload);
 })
-
-
-
-
-
 
  // Styles
  gulp.task('styles', function() {

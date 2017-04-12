@@ -1,4 +1,4 @@
-console.log('home')
+console.log('home');
 // require.ensure([],function(){
 //     var d3 = require('../plugins/d3/d3.min.js');
 //     // console.log(d3)
